@@ -78,10 +78,6 @@ app.post('/links',
 // Write your authentication routes here
 /************************************************************/
 app.post('/signup', (req, res, next) => {
-  //after user types in username, password,enter
-  //TODO: Check if user already exists in db
-  //if they exist -->redirect back to signup page
-  //otherwise -->models.users.create
   var username = req.body.username;
   return models.Users.get({ username })
     .then(user => {
@@ -95,20 +91,16 @@ app.post('/signup', (req, res, next) => {
 });
 
 app.post('/login', (req, res, next) => {
-  //after user types in username, password,enter
-  //TODO: Check if user already exists in db
-  //if they exist -->redirect back to signup page
-  //otherwise -->models.users.create
   var username = req.body.username;
+  var password = req.body.password;
   return models.Users.get({ username })
     .then(user => {
       if (user) {
-       var password = req.body.password;
-       if (models.Users.compare(password, user.password,user.salt)){
-         res.redirect('/');
-       } else {
-         res.redirect('/login');
-       }
+        if (models.Users.compare(password, user.password, user.salt)) {
+          res.redirect('/');
+        } else {
+          res.redirect('/login');
+        }
       }
       res.redirect('/login');
     });
