@@ -83,10 +83,8 @@ app.post('/signup', (req, res, next) => {
   //if they exist -->redirect back to signup page
   //otherwise -->models.users.create
   var username = req.body.username;
-  console.log(username);
-    return models.Users.get({ username })
+  return models.Users.get({ username })
     .then(user => {
-      //console.log(user);
       if (user) {
         res.redirect('/signup');
         throw user;
@@ -96,6 +94,25 @@ app.post('/signup', (req, res, next) => {
     });
 });
 
+app.post('/login', (req, res, next) => {
+  //after user types in username, password,enter
+  //TODO: Check if user already exists in db
+  //if they exist -->redirect back to signup page
+  //otherwise -->models.users.create
+  var username = req.body.username;
+  return models.Users.get({ username })
+    .then(user => {
+      if (user) {
+       var password = req.body.password;
+       if (models.Users.compare(password, user.password,user.salt)){
+         res.redirect('/');
+       } else {
+         res.redirect('/login');
+       }
+      }
+      res.redirect('/login');
+    });
+});
 
 /************************************************************/
 // Handle the code parameter route last - if all other routes fail
